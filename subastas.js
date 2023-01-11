@@ -44,7 +44,7 @@ const botonSubastar = document.getElementById("btn-subastar")
 botonSubastar.onclick = subastar;
 
 function subastar(){
-    if(parseInt(inputSubasta.value)>precioSubasta.innerHTML){        
+    if(inputSubasta.value>precioSubasta.innerHTML){        
         precioSubasta.innerHTML=inputSubasta.value;
     }else{
         alert("El precio ofertado debe ser mayor al precio actual");
@@ -59,9 +59,6 @@ function set_info(){
     let nombre=document.getElementById("nombre_usuario");
     let mail= document.getElementById("mail_usuario");
     let telefono=document.getElementById("telefono_usuario");
-    console.log(nombre.value);
-    console.log(mail.value);
-    console.log(telefono.value);
     let usuario={nombre_del_usuario:nombre.value,
     mail_del_usuario:mail.value,
     telefono_del_usuario:telefono.value};
@@ -70,11 +67,11 @@ function set_info(){
     localStorage.setItem("lista",lista_json);
     let recuperando= localStorage.getItem("lista");
     recuperando=JSON.parse(recuperando);
-    console.log(recuperando);
+
 }
 
 let boton=document.getElementById("btn-subastar");
-const listaCarrito=mostrarCarrito();
+mostrarCarrito();
 
 
 boton.addEventListener("click",set_info);
@@ -88,6 +85,7 @@ for(let i=0; i<boton_compra.length;i++){
 
 
 function agregar_carrito(e){
+    let listaCarrito=recuperarCarrito();
     let itemRepetido= false; /**Esta variable se usa cuando quiero comprar un item q ya esta en mi lista */
 
     let producto_2= e.target;
@@ -117,15 +115,13 @@ function agregar_carrito(e){
         listaCarrito.push(itemCarrito);    
     }
 
-    let listaCarrito_json=JSON.stringify(listaCarrito);
-    localStorage.setItem("listaCarrito",listaCarrito_json); /**Guardo mi lista, ya sea porque le agregue un item al carrito, o porque aumente el valor de algun producto que ya estaba dentro del carrito */
+    guardarCarrito(listaCarrito);
     carritoEnPantalla.innerHTML="";
     mostrarCarrito(); /* LLamo a la funcion que muestra el carrito */
 }
 
 function mostrarCarrito(){  /*Le cambie el nombre a la funcion (antes era solo carrito), de esta manera se entiende mejor que hace esta funcion */
-    let listaCarrito = JSON.parse(localStorage.getItem("listaCarrito")) || []; /*Me traigo del localStorage mi carrito, sino encuentra nada la defino en nulo por eso el operacional logico || */
-
+    let listaCarrito = recuperarCarrito();
     listaCarrito.forEach(producto =>{ /*para cada elemento de la lista voy a hacer lo siguiente */
         let fila = document.createElement("tr");
         fila.innerHTML = `<td><img class="carrito-img" src="${producto.img}"></td> 
@@ -149,6 +145,18 @@ function mostrarCarrito(){  /*Le cambie el nombre a la funcion (antes era solo c
 }
 
 function borrarElemento(e){
+    let listaCarrito=recuperarCarrito();
+    let imgParaBorrar= e.target.parentNode.parentNode.querySelector(".carrito-img").src;
+
+    let pos=0;
+    listaCarrito.forEach(producto => {  /** Recorro mi listaCarrito (Es la que esta en local storage) */
+        if(imgParaBorrar==producto.img){ /**Pregunto si la imagen del item que va a comprar la persona es igual al producto que tengo guardado en el localstorage (es decir si ya existe en mi carrito) */
+            listaCarrito.splice (pos,1);
+        }
+        pos++;
+    });
+    guardarCarrito(listaCarrito);
+    
     let botonPresionado = e.target;
     let columnaBotonPresionado = botonPresionado.parentNode;
     let fila = columnaBotonPresionado.parentNode;
@@ -157,3 +165,13 @@ function borrarElemento(e){
 
 
 
+function recuperarCarrito(){
+    let listaCarrito = JSON.parse(localStorage.getItem("listaCarrito")) || [];
+    return listaCarrito;
+}
+
+function guardarCarrito(listaCarrito){
+    let listaCarrito_json=JSON.stringify(listaCarrito);
+    localStorage.setItem("listaCarrito",listaCarrito_json); /**Guardo mi lista, ya sea porque le agregue un item al carrito, o porque aumente el valor de algun producto que ya estaba dentro del carrito */
+
+}
