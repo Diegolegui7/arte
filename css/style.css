@@ -2,8 +2,9 @@
     margin: 0px;
     padding: 0px;
 }
+
 header{
-    background-color: lightblue;
+    background-color: #eac1ff;
 }
 
 .header-login{
@@ -24,11 +25,22 @@ header{
     margin-right: 20px;
     padding-top: 5px;
 }
-
+.titulos{
+    display: flex;
+    justify-content: center;
+    margin: 15px;
+    font-size: 30px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
 h1{
     display: flex;
     justify-content: center;
     margin-bottom: 10px;
+    
+}
+.nav-item:hover{
+    background-color: blue;
+    font-weight:900;
 }
 
 .carousel-inner img{
@@ -175,11 +187,11 @@ h1{
 #carrito{
     width: 40%; 
     background-color: lightcoral; 
-    height: 60vh;
+    height: auto;
     top: 50%;
     left: 70%;
     position: sticky;
-
+    padding: 20px;
  }
  #carrito h2{
     display: flex;

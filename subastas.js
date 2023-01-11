@@ -44,7 +44,7 @@ const botonSubastar = document.getElementById("btn-subastar")
 botonSubastar.onclick = subastar;
 
 function subastar(){
-    if(inputSubasta.value>precioSubasta.innerHTML){        
+    if(parseInt(inputSubasta.value)>precioSubasta.innerHTML){        
         precioSubasta.innerHTML=inputSubasta.value;
     }else{
         alert("El precio ofertado debe ser mayor al precio actual");
