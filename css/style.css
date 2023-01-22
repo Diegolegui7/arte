@@ -118,6 +118,16 @@ h1{
 }
 
 
+
+#comprar{
+    font-size: 30px;
+    border-radius: 7px;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+#comprar:hover{
+    background-color: blue;
+}
 .input-conteiner{
     margin: 10px;
     height: 35px;

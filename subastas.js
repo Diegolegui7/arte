@@ -37,9 +37,8 @@ console.log(resultado_filter);*/
 
 const subastaDiv = document.getElementById("subastas-div");
 const precioSubasta = document.getElementById("precio-subasta");
-const inputSubasta = document.getElementById("caja-input-subasta")
-const botonSubastar = document.getElementById("btn-subastar")
-
+const inputSubasta = document.getElementById("caja-input-subasta");
+const botonSubastar = document.getElementById("btn-subastar");
 
 botonSubastar.onclick = subastar;
 
@@ -80,7 +79,7 @@ const boton_compra= document.querySelectorAll(".botonCompra");
 
 
 for(let i=0; i<boton_compra.length;i++){
-    boton_compra[i].addEventListener("click",agregar_carrito)
+      boton_compra[i].addEventListener("click",agregar_carrito)
 }
 
 
@@ -114,25 +113,28 @@ function agregar_carrito(e){
     if(!itemRepetido){ /**Si el item no esta repetido, entonces voy a agregarlo a mi lista que voy a guardar en mi local storage */
         listaCarrito.push(itemCarrito);    
     }
-
+    
     guardarCarrito(listaCarrito);
     carritoEnPantalla.innerHTML="";
     mostrarCarrito(); /* LLamo a la funcion que muestra el carrito */
+
+    
 }
 
 function mostrarCarrito(){  /*Le cambie el nombre a la funcion (antes era solo carrito), de esta manera se entiende mejor que hace esta funcion */
     let listaCarrito = recuperarCarrito();
     listaCarrito.forEach(producto =>{ /*para cada elemento de la lista voy a hacer lo siguiente */
+        let precio_total = parseInt(producto.precio)*producto.cantidad;
         let fila = document.createElement("tr");
         fila.innerHTML = `<td><img class="carrito-img" src="${producto.img}"></td> 
                           <td>${producto.nombre}</td>
                           <td>${producto.cantidad}</td>
-                          <td>${producto.precio}</td>
-                          <td><button class="botones-carrito boton-suma">+</button></td>
-                          <td><button class="botones-carrito boton">-</button></td>
+                          <td>${precio_total}</td>
+                          <td><button id="boton-suma" class="botones-carrito">+</button></td>
+                          <td><button class="botones-carrito boton-resta">-</button></td>
                           <td><button class="btn btn-danger borrar_elemento">Borrar</button></td>
-                          `;    /**En la linea 129 agregue un estilo para q la imagen se vea chico */
-
+                         `;    /**En la linea 129 agregue un estilo para q la imagen se vea chico */
+           console.log(precio_total);
         let tabla = document.getElementById("tbody");
         tabla.append( fila );
     })
@@ -175,3 +177,55 @@ function guardarCarrito(listaCarrito){
     localStorage.setItem("listaCarrito",listaCarrito_json); /**Guardo mi lista, ya sea porque le agregue un item al carrito, o porque aumente el valor de algun producto que ya estaba dentro del carrito */
 
 }
+
+let finalizar_compra= document.getElementById("comprar");
+
+finalizar_compra.addEventListener("click", function(){
+    Toastify({
+        text: "COMPRA EXITOSA",
+        duration: 1000,
+        style:{
+           fontSize: "30px",
+           color: "black",
+           background: "lightgreen"
+        }
+        
+    
+    }).showToast();
+});
+
+function sumar(){
+    let suma= document.getElementsByClassName("boton-suma");
+
+  suma.addEventListener("click", function(e){
+    let listaCarrito=recuperarCarrito();
+
+    let producto_2= e.target;
+    let producto_1= producto_2.parentNode;
+    let producto=producto_1.parentNode;
+    let img_productos = producto.querySelector("img").src;
+
+    let itemCarrito={  /** Es el mismo objeto pero le cambie el nombre para q sea mas facil */
+        nombre: nombre_productos,
+        precio: precio_productos,
+        img: img_productos,
+        cantidad:1
+    };
+
+    listaCarrito.forEach(producto => {  
+    if(itemCarrito.img==producto.img){
+        producto.cantidad++;
+        
+    }
+    
+    guardarCarrito(listaCarrito);
+    carritoEnPantalla.innerHTML="";
+    mostrarCarrito(); /* LLamo a la funcion que muestra el carrito */
+}); 
+})}
+
+
+
+
+
+
