@@ -224,3 +224,10 @@ h1{
     height: 60px;
     width: 60px;
   }
+
+  .btnvendido{
+   background-color: red;
+  }
+  .btnvendido{
+    background-color: none;
+  }

@@ -130,11 +130,14 @@ function mostrarCarrito(){  /*Le cambie el nombre a la funcion (antes era solo c
                           <td>${producto.nombre}</td>
                           <td>${producto.cantidad}</td>
                           <td>${precio_total}</td>
-                          <td><button id="boton-suma" class="botones-carrito">+</button></td>
+                          <td><button class="boton-suma botones-carrito">+</button></td>
                           <td><button class="botones-carrito boton-resta">-</button></td>
                           <td><button class="btn btn-danger borrar_elemento">Borrar</button></td>
                          `;    /**En la linea 129 agregue un estilo para q la imagen se vea chico */
-           console.log(precio_total);
+        let botonSuma= fila.querySelector(".boton-suma");
+        let botonResta = fila.querySelector(".boton-resta")
+        botonSuma.addEventListener("click", sumarRestarItems);
+        botonResta.addEventListener("click", sumarRestarItems);
         let tabla = document.getElementById("tbody");
         tabla.append( fila );
     })
@@ -144,8 +147,29 @@ function mostrarCarrito(){  /*Le cambie el nombre a la funcion (antes era solo c
         boton_borrar[i].addEventListener("click",borrarElemento)
     }
     return listaCarrito ;    
+    
+    const sumemos= document.querySelectorAll(".boton-suma");
+    for(let i=0; i<sumemos.length;i++){
+        sumemos[i].addEventListener("click",sumarElemento)
+    }
 }
+function sumarElemento(e){
+    let listaCarrito=recuperarCarrito();
+    let suma= e.target.parentNode.parentNode.querySelector(".carrito-img").src;
 
+
+    listaCarrito.forEach(producto => {  
+        if(suma==producto.img){
+            producto.cantidad++;
+            
+        }});
+    guardarCarrito(listaCarrito);
+    
+    let botonPresionado = e.target;
+    let columnaBotonPresionado = botonPresionado.parentNode;
+    let fila = columnaBotonPresionado.parentNode;
+    fila.innerHTML="";
+}
 function borrarElemento(e){
     let listaCarrito=recuperarCarrito();
     let imgParaBorrar= e.target.parentNode.parentNode.querySelector(".carrito-img").src;
@@ -194,35 +218,33 @@ finalizar_compra.addEventListener("click", function(){
     }).showToast();
 });
 
-function sumar(){
-    let suma= document.getElementsByClassName("boton-suma");
-
-  suma.addEventListener("click", function(e){
-    let listaCarrito=recuperarCarrito();
-
-    let producto_2= e.target;
-    let producto_1= producto_2.parentNode;
-    let producto=producto_1.parentNode;
-    let img_productos = producto.querySelector("img").src;
-
-    let itemCarrito={  /** Es el mismo objeto pero le cambie el nombre para q sea mas facil */
-        nombre: nombre_productos,
-        precio: precio_productos,
-        img: img_productos,
-        cantidad:1
-    };
-
-    listaCarrito.forEach(producto => {  
-    if(itemCarrito.img==producto.img){
-        producto.cantidad++;
-        
+function sumarRestarItems(e){
+    let imgParaBorrar = e.target.parentNode.parentNode.querySelector("img").src;
+    let listaCarrito = recuperarCarrito();
+    let pos=0;
+    if(e.target.classList.contains("boton-suma")){
+        listaCarrito.forEach(producto => {  /** Recorro mi listaCarrito (Es la que esta en local storage) */
+        if(imgParaBorrar==producto.img){ /**Pregunto si la imagen del item que va a comprar la persona es igual al producto que tengo guardado en el localstorage (es decir si ya existe en mi carrito) */
+            producto.cantidad++;
+        }
+    });
+    }else{
+        listaCarrito.forEach(producto => {  /** Recorro mi listaCarrito (Es la que esta en local storage) */
+        if(imgParaBorrar==producto.img){ /**Pregunto si la imagen del item que va a comprar la persona es igual al producto que tengo guardado en el localstorage (es decir si ya existe en mi carrito) */
+           if(producto.cantidad>1){
+               producto.cantidad--;
+           }else{
+            listaCarrito.splice (pos,1);
+           }
+        }
+        pos++;
+    });
     }
-    
+    const carritoEnPantalla = document.getElementById("tbody");
     guardarCarrito(listaCarrito);
     carritoEnPantalla.innerHTML="";
-    mostrarCarrito(); /* LLamo a la funcion que muestra el carrito */
-}); 
-})}
+    mostrarCarrito();
+}
 
 
 
